@@ -8,10 +8,6 @@
         {
             "src": "/",
             "dest": "/api/index.go"
-        },
-        {
-            "src": "/px/(.*)",
-            "dest": "/api/proxy.go"
         }
     ]
 }
