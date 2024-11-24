@@ -1,0 +1,9 @@
+{
+    "feeds": [
+        {
+            "name": "依云",
+            "uid": 123456789,
+            "url": "https://blog.lilydjwg.me/feed"
+        }
+    ]
+}
