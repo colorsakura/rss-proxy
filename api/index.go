@@ -24,6 +24,10 @@ const (
 var data Data
 
 func init() {
+	data = getData()
+}
+
+func getData() Data {
 	resp, err := http.Get(URL)
 	if err != nil {
 		log.Fatal(err)
@@ -33,13 +37,24 @@ func init() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = json.Unmarshal(body, &data)
+	var result Data
+	err = json.Unmarshal(body, &result)
 	if err != nil {
 		log.Fatal(err)
 	}
+	return result
+}
+
+func indexHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	rss, _ := json.Marshal(data)
+	fmt.Fprint(w, string(rss))
 }
 
 func Handler(w http.ResponseWriter, r *http.Request) {
-	rss, _ := json.Marshal(data)
-	fmt.Fprint(w, string(rss))
+	// TODO: routes handle
+	mux := http.NewServeMux()
+	mux.HandleFunc("/", indexHandler)
+
+	mux.ServeHTTP(w, r)
 }
