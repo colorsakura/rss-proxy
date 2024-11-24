@@ -22,7 +22,7 @@ var data Data
 
 func init() {
 	// open a file
-	f, err := os.Open("data.json")
+	f, err := os.Open("../data.json")
 	if err != nil {
 		log.Fatal(err)
 	}
