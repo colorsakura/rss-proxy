@@ -6,6 +6,8 @@ import (
 	"io"
 	"log"
 	"net/http"
+
+	"github.com/julienschmidt/httprouter"
 )
 
 type Data struct {
@@ -45,16 +47,25 @@ func getData() Data {
 	return result
 }
 
-func indexHandler(w http.ResponseWriter, r *http.Request) {
+func indexHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	// TODO: 主页应该返回一个汇总网页
 	w.Header().Set("Content-Type", "application/json")
+	rss, _ := json.Marshal(data)
+	fmt.Fprint(w, string(rss))
+}
+
+func rssHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	// TODO: 返回一个RSS源
+	w.Header().Set("Content-Type", "application/rss+xml")
 	rss, _ := json.Marshal(data)
 	fmt.Fprint(w, string(rss))
 }
 
 func Handler(w http.ResponseWriter, r *http.Request) {
 	// TODO: routes handle
-	mux := http.NewServeMux()
-	mux.HandleFunc("/", indexHandler)
+	router := httprouter.New()
+	router.GET("/", indexHandler)
+	router.GET("/rss", rssHandler)
 
-	mux.ServeHTTP(w, r)
+	router.ServeHTTP(w, r)
 }
