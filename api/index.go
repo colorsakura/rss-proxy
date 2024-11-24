@@ -6,7 +6,6 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"os"
 )
 
 type Data struct {
@@ -18,24 +17,23 @@ type Data struct {
 	} `json:"feeds"`
 }
 
+const (
+	URL = "https://raw.githubusercontent.com/colorsakura/rss-proxy/refs/heads/rss/data.json"
+)
+
 var data Data
 
 func init() {
-	// open a file
-	f, err := os.Open("data.json")
+	resp, err := http.Get(URL)
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer f.Close()
-
-	// read the file
-	b, err := io.ReadAll(f)
+	defer resp.Body.Close()
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	// unmarshal the file
-	err = json.Unmarshal(b, &data)
+	err = json.Unmarshal(body, &data)
 	if err != nil {
 		log.Fatal(err)
 	}
